@@ -1,0 +1,135 @@
+DAX Queries
+- How to create a measure, a measure is an quick value of column, a value of column for which we cant create a column
+ex : The total sales of a column-> Total_Sale= Sum(PizzaSales[Sales])
+
+
+Average_revenue = AVERAGE(PizzaSales[Price_USD]) 
+
+Min_sale = MIN(PizzaSales[Sales] )
+
+Max_sale=Max(PizzaSales[Sales])
+
+Order Count = COUNT(Sales[OrderID])
+
+Sales Category = IF(Sales[Amount] > 1000, "High", "Low")
+
+More_classification = 
+SWITCH(
+    TRUE(), 
+    PizzaSales[Sales] > 50 && PizzaSales[Sales] < 100, "Good",
+    PizzaSales[Sales] >= 100 && PizzaSales[Sales] < 150, "Very Good",
+    PizzaSales[Sales] > 150, "Excellent",
+    "Other"
+)
+
+For Extraction of date
+
+
+Year = YEAR(Sales[Date])
+Month = MONTH(Sales[Date])
+Day = DAY(Sales[Date])
+
+
+Time_to_ship = DATEDIFF(Sales[OrderDate],Sales[ShipDate],DAY) 
+
+Guideline_date = DATEADD(Sales[OrderDate],7,DAY) 
+
+today = TODAY()
+
+now=Now()
+
+Full_name = CONCATENATE(Customer[FirstName]," " & Customer[LastName]) 
+
+first_three_letters = LEFT(Customer[FirstName],3)
+
+Mid_three_letter = MID(Customer[FirstName],3,5) text,starting postion, postion upto 
+
+last_three_letters = RIGHT(Customer[FirstName],3) 
+
+SEarch_rue = SEARCH("rue",Customer[AddressLine1],1,-1)
+
+Filter_table = FILTER(Sales,Sales[SalesAmount]>500) 
+
+Calucalted_sumodsales_where_keyis314 = CALCULATE(SUM(Sales[SalesAmount]),'Product'[ProductKey]=314)
+
+Sales for Product A in 2023 = CALCULATE(SUM(Sales[Amount]), Sales[Product] = "Product A", YEAR(Sales[Date]) = 2023)
+
+Total High Sales = CALCULATE(SUM(Sales[Amount]), FILTER(Sales, Sales[Amount] > 1000))
+
+Regional Sales in 2023 = CALCULATE(
+    SUM(Sales[Amount]),
+    FILTER(Sales, Sales[Region] = "North America" && YEAR(Sales[Date]) = 2023)
+)
+
+Category Sales in 2023 = CALCULATE(
+    SUM(Sales[Amount]),
+    FILTER(
+        Sales,
+        Sales[Category] = "Electronics" && YEAR(Sales[Date]) = 2023
+    )
+)
+
+7. Time Intelligence Functions
+These functions help analyze data over time.
+
+TOTALYTD, TOTALQTD, TOTALMTD
+
+Example: Calculate year-to-date sales.
+dax
+Copy code
+YTD Sales = TOTALYTD(SUM(Sales[Amount]), Sales[Date])
+DATEADD
+
+Example: Compare this year's sales to the previous year.
+dax
+Copy code
+Sales Last Year = CALCULATE(SUM(Sales[Amount]), DATEADD(Sales[Date], -1, YEAR))
+8. Context Functions
+Context functions allow you to manipulate the context in which a calculation is performed.
+
+RELATEDTABLE
+
+Example: Get related rows from another table.
+dax
+Copy code
+Related Orders = RELATEDTABLE(Orders)
+CALCULATE
+
+Example: Modify the context of a calculation.
+dax
+Copy code
+Sales In USA = CALCULATE(SUM(Sales[Amount]), Sales[Country] = "USA")
+9. Iterator Functions
+Iterator functions perform a calculation across a table row by row.
+
+SUMX
+
+Example: Calculate total revenue by multiplying quantity by price.
+dax
+Copy code
+Total Revenue = SUMX(Sales, Sales[Quantity] * Sales[Price])
+AVERAGEX
+
+Example: Calculate average price per product.
+dax
+Copy code
+Average Price = AVERAGEX(Products, Products[Price])
+10. Advanced DAX Functions
+RANKX
+
+Example: Rank products by sales.
+dax
+Copy code
+Sales Rank = RANKX(ALL(Products), [Total Sales])
+SUMMARIZE
+
+Example: Create a summary table.
+dax
+Copy code
+Summary Table = SUMMARIZE(
+  Sales,
+  Sales[ProductID],
+  "Total Sales", SUM(Sales[Amount])
+)
+Summary
+These examples cover the basic to intermediate functionalities of DAX. By understanding these concepts, you can build complex calculations and models in Power BI. If you want to dive deeper into any specific area or need more advanced examples, let me know!
